@@ -7,7 +7,7 @@
 Вы можете развернуть всю инфраструктуру автоматически с помощью готового bash-скрипта. Подключитесь к вашему серверу по SSH (например, ssh root@ваш_ip) и выполните следующие шаги:
 ```bash
 # Скачиваем скрипт
-wget https://raw.githubusercontent.com/Kaprojennoe/telegram-web-proxy-setup/main/install.sh
+wget https://raw.githubusercontent.com/holydno/tg-web-proxy/refs/heads/main/install.sh
 
 # Делаем скрипт исполняемым
 chmod +x install.sh
