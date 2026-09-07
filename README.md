@@ -1,10 +1,10 @@
 # tg-web-proxy
    
-# 1. Создайте новый файл скрипта:
+### 1. Создайте новый файл скрипта:
 ```bash
 nano install_tg_proxy.sh
 ```
-# 2. Вставьте в него следующий код:
+### 2. Вставьте в него следующий код:
 ```bash
 #!/bin/bash
 set -e
@@ -123,25 +123,25 @@ echo -e "${YELLOW}ВАЖНО: Убедитесь, что в панели упр�
 ```
 (Вставьте код, сохраните через Ctrl+O, Enter, затем выйдите через Ctrl+X)
 
-# Сделайте его исполняемым и запустите:
+### Сделайте его исполняемым и запустите:
    ```bash
 chmod +x install_tproxy_fixed.sh
 sudo bash install_tproxy_fixed.sh
    ```
-# Ссылка для подключения имеет стандартный формат Telegram:
+### Ссылка для подключения имеет стандартный формат Telegram:
 ```bash
 https://t.me/webproxy?server=ВАШ_ДОМЕН&secret=ВАШ_СЕКРЕТ
 ```
-## Узнать свой секрет И ДОБАВИТЬ В НЕГО dd в начале
+### Узнать свой секрет И ДОБАВИТЬ В НЕГО dd в начале
 ```bash
 sudo grep MTPROXY_SECRET /etc/mtproxy/mtproxy.env | cut -d= -f2
 ```
-## Узнать свой домен
+### Узнать свой домен
 ```bash
 sudo grep public_hostname /etc/tproxy-server/config.json | awk -F'"' '{print $4}'
 ```
 
-# Проверка работоспособности
+## Проверка работоспособности
 https://ВАШ_ДОМЕН
 ## Проверка статуса MTProxy
 Выполните эту команду, чтобы убедиться, что MTProxy запущен и слушает порт:
@@ -156,13 +156,13 @@ sudo ss -lntp | grep 2398
 ```bash
 sudo journalctl -u mtproxy --since "10 minutes ago" --no-pager
 ```
-## Проверка логов tproxy-server
+### Проверка логов tproxy-server
 Попробуйте подключиться с клиента, а затем сразу выполните:
 ```bash
 sudo journalctl -u tproxy-server --since "2 minutes ago" --no-pager
 ```
 Ищите ошибки или предупреждения. Если видите что-то вроде "bridge not found" или "session creation failed" — это укажет на проблему.
-## Проверка firewall
+### Проверка firewall
 Убедитесь, что firewall не блокирует внутренние порты:
 ```bash
 sudo nft list table inet tproxy_backend
@@ -171,7 +171,7 @@ sudo nft list table inet tproxy_backend
 ```bash
 sudo ss -lntp
 ```
-## Проверка секрета и профиля
+### Проверка секрета и профиля
 Посмотрите, какой секрет используется в профиле:
 ```bash
 sudo cat /etc/tproxy-server/profiles.json
@@ -181,38 +181,50 @@ sudo cat /etc/tproxy-server/profiles.json
 sudo cat /etc/mtproxy/mtproxy.env
 ```
 Убедитесь, что в profiles.json секрет совпадает с тем, что вы используете в клиенте (без префикса dd, если он есть в mtproxy.env — установщик автоматически убирает dd для бэкенда).
-## Проверка bridge capability
+### Проверка bridge capability
 Откройте в браузере (не в Telegram!) эту ссылку, подставив ваш реальный секрет:
 
 https://ВАШ_ДОМЕН/?bridge=dd0123456789abcdef0123456789abcdef
 
 Если вы видите ту же страницу "Welcome" — это нормально (bridge не должен быть доступен без правильной capability). Если видите ошибку или что-то другое — это укажет на проблему.
 
-# Исправление прав доступа
+## Исправление прав доступа
    
-# Дадим права на выполнение для всех пользователей
+### Дадим права на выполнение для всех пользователей
 ```bash
 sudo chmod 755 /opt/MTProxy/objs/bin/mtproto-proxy
 ```
-# Проверим права на директории
+### Проверим права на директории
 ```bash
 sudo chmod 755 /opt/MTProxy
 sudo chmod 755 /opt/MTProxy/objs
 sudo chmod 755 /opt/MTProxy/objs/bin
 ```
-# Проверим, что пользователь mtproxy может зайти в рабочую директорию
+### Проверим, что пользователь mtproxy может зайти в рабочую директорию
 ```bash
 sudo chown -R root:root /opt/MTProxy
 ```
-# Перезапустим сервис
+### Перезапустим сервис
 ```bash
 sudo systemctl daemon-reload
 sudo systemctl restart mtproxy
 sudo systemctl status mtproxy --no-pager
 ```
    
-Проверка результата
+### Проверка результата
 После выполнения этих команд MTProxy должен запуститься. Проверьте статус:
 ```bash
 sudo systemctl status mtproxy --no-pager
+```
+### Проверка статуса всех сервисов:
+```bash
+sudo systemctl status caddy mtproxy tproxy-server
+```
+### Мониторинг логов в реальном времени (если вдруг что-то пойдет не так):
+```bash
+sudo journalctl -u tproxy-server -f
+```
+### Безопасное обновление прокси до новой версии (когда она выйдет):
+```bash
+cd /tmp/tproxy-server && sudo ./deploy/update-relay.sh
 ```
