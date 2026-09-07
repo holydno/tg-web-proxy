@@ -146,14 +146,17 @@ sudo bash install_tproxy_fixed.sh
 ```bash
 https://t.me/webproxy?server=ВАШ_ДОМЕН&secret=ВАШ_СЕКРЕТ
 ```
-### Узнать свой секрет И ДОБАВИТЬ В НЕГО dd в начале
+## 🔥🔥🔥 Как получить ссылку прямо сейчас одной командой
 ```bash
-sudo grep MTPROXY_SECRET /etc/mtproxy/mtproxy.env | cut -d= -f2
+HOST=$(sudo grep public_hostname /etc/tproxy-server/config.json | awk -F'"' '{print $4}')
+SECRET=$(sudo grep MTPROXY_SECRET /etc/mtproxy/mtproxy.env | cut -d= -f2)
+echo -e "\n✅ Ваша ссылка для подключения:\nhttps://t.me/webproxy?server=${HOST}&secret=dd${SECRET}\n"
 ```
-### Узнать свой домен
-```bash
-sudo grep public_hostname /etc/tproxy-server/config.json | awk -F'"' '{print $4}'
-```
+- https://t.me/webproxy — это специальный обработчик ссылок в Telegram, который автоматически открывает окно добавления прокси.
+- server= — ваш домен (без https:// и портов, так как Web Proxy всегда работает через стандартный 443 порт).
+- secret= — ваш 32-символьный ключ. Префикс dd добавляется вручную, так как он указывает клиентам Telegram использовать маскировку под обычный HTTPS-трафик (Fake-TLS), что критически важно для обхода блокировок.
+
+Теперь вы можете просто скопировать эту ссылку, отправить её себе в «Избранное» и подключаться в один клик с любого устройства! Если захотите дать доступ другу, просто отправьте эту же ссылку ему.
 
 ## Проверка работоспособности
 https://ВАШ_ДОМЕН
