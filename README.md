@@ -1,5 +1,17 @@
 # tg-web-proxy
-   
+
+## 🔥 Автоматическая установка (Быстрый старт)
+
+Вы можете развернуть всю инфраструктуру автоматически с помощью готового bash-скрипта. Подключитесь к вашему серверу по SSH (например, ssh root@ваш_ip) и выполните следующие шаги:
+```bash
+# Скачиваем скрипт
+wget https://raw.githubusercontent.com/Kaprojennoe/telegram-web-proxy-setup/main/install.sh
+
+# Делаем скрипт исполняемым
+chmod +x install.sh
+sudo bash install.sh
+```
+## 🛠 Ручная установка
 ### 1. Создайте новый файл скрипта:
 ```bash
 nano install_tg_proxy.sh
